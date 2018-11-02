@@ -1,4 +1,5 @@
 /* eslint-env node, jest */
+const { performance } = require('perf_hooks');
 const Babel = require('babel-standalone');
 Babel.registerPlugin('loopProtection', require('../lib')(100));
 const assert = e => console.assert(e);

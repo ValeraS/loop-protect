@@ -26,9 +26,9 @@ console.log('All finished');
 
 ```js
 let i = 0;
-var _LP = Date.now();
+var _LP = performance.now();
 while (true) {
-  if (Date.now() - _LP > 100)
+  if (performance.now() - _LP > 100)
     break;
 
   doSomething();
@@ -39,7 +39,11 @@ console.log('All finished');
 
 ## Usage
 
-The loop protection is a babel transform, so can be used on the server or in the client.
+The loop protection is a babel transform, so can be used on the server or in the client. To use on the server need to require `performance` from a `perf_hooks` module.
+
+```js
+const { performance } = require('perf_hooks');
+```
 
 The previous implementation used an injected library to handle tracking loops - this version does not.
 
@@ -76,12 +80,13 @@ doc.close();
 // code now runs, and if there's an infinite loop, it's cleanly exited
 ```
 
-### Optional Second Argument 
-In the above implementation, when code transformed by loop-protect contains an infinite loop, the loop is cleanly exited with a `break` statement, and any code after the loop is executed normally. See [example](https://github.com/jsbin/loop-protect#example). 
+### Optional Second Argument
 
-But what if you want to log an error to the console to warn the user, or throw an error instead, to stop execution when an infinite loop is encountered? The `protect` function takes an optional second argument which can handle both behaviors. 
+In the above implementation, when code transformed by loop-protect contains an infinite loop, the loop is cleanly exited with a `break` statement, and any code after the loop is executed normally. See [example](https://github.com/jsbin/loop-protect#example).
 
-1. To log an error to the console, but continue exectution after the loop, pass `protect` a string as a second argument. When an infinite loop is encountered, this string will be logged with `console.error()`, letting the user know of their mistake. 
+But what if you want to log an error to the console to warn the user, or throw an error instead, to stop execution when an infinite loop is encountered? The `protect` function takes an optional second argument which can handle both behaviors.
+
+1. To log an error to the console, but continue exectution after the loop, pass `protect` a string as a second argument. When an infinite loop is encountered, this string will be logged with `console.error()`, letting the user know of their mistake.
 
 2. To throw an error and stop execution, pass `protect` a simple callback function which throws a new error. Note that if you define the callback with a `line` parameter, you can use this with a template literal for a more specific error message. For example:
 
@@ -99,7 +104,7 @@ Babel.registerPlugin('loopProtection', protect(timeout, callback));
 const transform = source => Babel.transform(source, {
   plugins: ['loopProtection'],
 }).code;
-  
+
 var processed = transform(getUserCode());
 
 // do more stuff with processed code here

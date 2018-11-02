@@ -1,4 +1,5 @@
 /* eslint-env node, jest */
+const { performance } = require('perf_hooks');
 const Babel = require('babel-standalone');
 
 const code = `let i = 0; while (true) { i++; }; done(i)`;

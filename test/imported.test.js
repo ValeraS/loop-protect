@@ -1,4 +1,5 @@
 /* eslint-env node, jest */
+const { performance } = require('perf_hooks');
 const Babel = require('babel-standalone');
 const plugin = require('../lib');
 import callback from './callback-exported';
